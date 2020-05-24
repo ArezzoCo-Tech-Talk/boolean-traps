@@ -4,7 +4,7 @@ Tech Talk para falar um pouco mais sobre boolean traps no JavaScript e como evit
 
 ## Oque são boolean traps?
 
-Boolean traps ocorrem qunado um função recebe um parâmetro do tipo boolean e não sabemos exatamente para oque aquele booleano serve e oque ele irá fazer dentro da função. Podemos chamar isso também de function parameter traps.
+Boolean traps ocorrem quando uma função recebe um parâmetro do tipo boolean e não sabemos exatamente para oque aquele booleano serve e oque ele irá fazer dentro da função. Podemos chamar isso também de function parameter traps.
 
 ```js
 NavigationService.popToTop(true)
@@ -14,12 +14,12 @@ Oque o true faz? Chutem.
 
 Perguntas que vão surgir ao ver essa chamada em algum lugar no código:
 
-- Oque `true` significa?
+- Oque `true` significa nesse contexto?
 - Oque ele faz dentro do código?
 - E se eu não passar nada?
 - E se eu passar false?
 
-Todas essas perguntas são difíceis de serem respondidas em um primeiro momento, portanto teriamos analisar a implementação dessa função, ou, no caso de uma lib ler a documentação e então descobrir oque o parâmetro significa.
+Todas essas perguntas são difíceis de serem respondidas em um primeiro momento, portanto teriamos que analisar a implementação dessa função, ou, no caso de uma lib ler a documentação e então descobrir oque o parâmetro significa e faz.
 
 ----
 
@@ -35,7 +35,7 @@ Nesse caso temos uma função com 6 parâmetros, dentre eles `booleanos`, `array
 getHeaderOptions(true, true, [], [], false, "Batata")
 ```
 
-Vamos piorar mais ainda a situação, digamos que alguns desses parâmetros sejam opcionais? Na hora de declarar a função eu teria que cuidar para que os parâmetros opcionais ficassem por último, já que, para passar o terceiro parâmetro eu preciso obrigatoriamente passar o primeiro e o segundo.
+Vamos piorar mais ainda a situação, digamos que alguns desses parâmetros sejam opcionais. Na hora de declarar a função eu teria que cuidar para que os parâmetros opcionais ficassem por último, já que, para passar o terceiro parâmetro eu preciso obrigatoriamente passar o primeiro e o segundo.
 
 E se todos os parâmetros forem opcionais e eu quiser passar apenas o parâmetro `"Batata"` a chamada vai continuar igual:
 
@@ -49,7 +49,7 @@ E se eu quiser adicionar um novo parâmetro a essa função?
 
 1) Eu adiciono esse parametro como último parâmetro, assim, todos os lugares que chamam a função, continuam funcionando, sem precisar de refactor, mas, se alguns dias depois eu precisar adicionar mais um parâmetro, o refactor é obrigatório.
 
-2) Adiciono ele no meio dos parâmetros e refatoro todos os lugares que está sendo usado.
+2) Adiciono ele no meio ou no final dos parâmetros e refatoro todos os lugares que a função está sendo usada.
 
 ----
 
@@ -59,7 +59,7 @@ Podemos ver essas falhas até mesmo em funções nativas do JavaScript, como é 
 'string de teste'.replace(' ', '-')
 ```
 
-Estou fazendo replace do `' '` por um `-` ou o contrário, talvez para quem usa o JS a tempo seja claro, mas para muitos isso pode parecer confuso e faz com que essas pessoas tenham que visitar a documentação diversas vez.
+Estou fazendo replace do `' '` por um `-` ou o contrário? Talvez para quem usa o JS a tempo seja claro, mas para muitos isso pode parecer confuso e faz com que essas pessoas tenham que visitar a documentação diversas vez.
 
 ----
 
@@ -69,11 +69,11 @@ Enfim, vimos varios exemplos de boolean traps e como eles afetam o desenvolvimen
 - Dificuldade para modificação das funções
 - Dificuldade no entendimento das funções
 
-Como podemos evitar isso e melhorar todos esses pontos citados a cima?
+Como podemos evitar isso e melhorar todos esses pontos citados acima?
 
 ## OBJECT LITERAL FUNCTION PARAMETERS
 
-Esse conceito baseia se em sempre passar um `objeto` como parâmetro de uma função e ja fazer a desestruturação dele diretamente na declaração do corpo da função.
+Esse conceito baseia se em sempre passar um `objeto` como parâmetro de uma função e ja fazer a desestruturação dele diretamente na declaração da função.
 Vamos voltar para o primeiro exemplo que foi passado para entender melhor:
 
 **Declaração**
@@ -104,7 +104,7 @@ Depois:
 NavigationService.popToTop({ immediate: true })
 ```
   
-Como podemos ver, a declaração da função nesse caso não mudou muito, apenas na hora da chamada fica muito mais facil de entender oque aquele parâmetro faz. Immediate remete a algo imediato, portanto consigo entender que passando `true` aquela função será executada imediatamente sem animações ou delays.
+Como podemos ver, a declaração da função nesse caso não mudou muito, apenas na chamada que conseguimos ver o real ganho, fica muito mais facil de entender oque aquele parâmetro faz. Immediate remete a algo imediato, portanto consigo entender que passando `true` aquela função será executada imediatamente sem animações ou delays.
   
 ----
 
@@ -128,7 +128,7 @@ getHeaderOptions({
 
 Agora fica muito mais claro entender oque cada um dos parâmetros significa e não é necessário acessar nenhuma documentação ou a declaração da função para entedê-la.
  
-Utilizando o conceito de object literal function parâmetes é possível fazer com que qualquer um dos parâmetros seja opcional e alem disso, a ordem com que esses parâmetros é passada para a função é indiferentem, ja que ela se baseia na chave utilizada dentro do objeto.
+Utilizando o conceito de object literal function parâmetes é possível fazer com que qualquer um dos parâmetros seja opcional e alem disso, a ordem com que esses parâmetros é passada para a função é indifere ja que ela se baseia na chave utilizada dentro do objeto.
  
 Se todos forem opcionais e eu quiser passar apenas o parâmetro `"Batata"`:
 
@@ -137,7 +137,7 @@ getHeaderOptions({ headerTitle: 'Batata' })
 ```
 E se eu quiser adicionar um novo parâmetro a essa função? 
 
-Bom, basta adicionar uma nova chave ao objeto que está sendo declarano no corpo da função, passar um valor default para ele que todos os lugares em que a função está sendo utilizada vai continuar funcionando, sem muitos refactors e problemas de retrocompatibilidade de código.
+Bom, basta adicionar uma nova chave ao objeto que está sendo desestruturado na função e passar um valor default para ele que todos os lugares em que a função está sendo utilizada irão continuar funcionando, sem muitos refactors e problemas de retrocompatibilidade de código.
 
 A função que antes era declarada assim:
 ```js
@@ -164,7 +164,7 @@ getHeaderOptions({
   } = {}) {...}
 ```
 
-E todos os lugares que estava utilizando ela sem passar esse valor poderão continuar não passando esse valor que o valor default será utilizado.
+E todos os lugares que estavam utilizando ela sem passar esse valor poderão continuar não passando esse valor que o valor default será utilizado.
 
 ----
 
@@ -174,7 +174,7 @@ Já o caso da função `replace` caso ela seguisse esse padrão, poderiamos cham
 'string teste'.replace({oldCharacter: ' ', newCharacter: '-'})
 ```
 
-Muito mais claro e de facil entendimento.
+Muito mais claro e de fácil entendimento, mas como iremos ver mais pra frente mais verboso.
 
 ## Vantagens dos Object Literal Funtion Parameters
 
@@ -188,3 +188,7 @@ Muito mais claro e de facil entendimento.
 
 - Código mais verboso
 - Um pouco mais complexo de ser entendido por iniciantes
+
+## Referências
+
+Lea Verou - JS UX: Writing code for humans - BrazilJS Conf 2016: https://www.youtube.com/watch?v=loj3CLHovt0&list=PLIjRSZIgC41N7neVqbcKVaS0A4TxY_aLL&index=8
