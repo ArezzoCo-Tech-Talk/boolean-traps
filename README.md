@@ -71,7 +71,7 @@ Enfim, vimos varios exemplos de boolean traps e como eles afetam o desenvolvimen
 
 Como podemos evitar isso e melhorar todos esses pontos citados a cima?
 
-##_OBJECT LITERAL FUNCTION PARAMETERS_
+## OBJECT LITERAL FUNCTION PARAMETERS
 
 Esse conceito baseia se em sempre passar um `objeto` como parâmetro de uma função e ja fazer a desestruturação dele diretamente na declaração do corpo da função.
 Vamos voltar para o primeiro exemplo que foi passado para entender melhor:
